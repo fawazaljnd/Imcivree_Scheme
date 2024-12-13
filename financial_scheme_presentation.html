@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Scheme Presentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #333;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            color: #555;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .dynamic {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #f9f9f9;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        table th {
+            background: #f2f2f2;
+            color: #333;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+        .note {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Financial Scheme for Patient Treatment</h1>
+        </div>
+        <div class="section">
+            <h2>Dynamic Inputs</h2>
+            <div class="dynamic">
+                <strong>Age:</strong> <input type="number" id="age" placeholder="Enter Age">
+                <br>
+                <strong>Cost per Vial ($):</strong> <input type="number" id="costPerVial" placeholder="Enter Cost per Vial">
+                <br>
+                <strong>Cost Reduction % (0-4 months):</strong> <input type="number" id="costReduction1" placeholder="Enter Reduction %">
+                <br>
+                <strong>Cost Reduction % (5-8 months):</strong> <input type="number" id="costReduction2" placeholder="Enter Reduction %">
+                <br>
+                <strong>Cost Reduction % (9-12 months):</strong> <input type="number" id="costReduction3" placeholder="Enter Reduction %">
+            </div>
+        </div>
+        <div class="section">
+            <h2>Calculation Results</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Phase</th>
+                        <th>Total Months Doses (mg)</th>
+                        <th>Vials Consumed</th>
+                        <th>Cost Before Discount ($)</th>
+                        <th>Total Free Dose / Vials</th>
+                        <th>Cost of Free Doses ($)</th>
+                        <th>Total Phase Cost ($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0-4 months</td>
+                        <td><input type="number" id="totalDosePhase1" placeholder="Enter Total Doses"></td>
+                        <td id="vialsConsumedPhase1">0.00</td>
+                        <td id="costBeforeDiscountPhase1">0.00</td>
+                        <td id="freeDosesPhase1">0.00 / 0.00</td>
+                        <td id="costFreeDosesPhase1">0.00</td>
+                        <td id="totalCostPhase1">0.00</td>
+                    </tr>
+                    <tr>
+                        <td>5-8 months</td>
+                        <td><input type="number" id="totalDosePhase2" placeholder="Enter Total Doses"></td>
+                        <td id="vialsConsumedPhase2">0.00</td>
+                        <td id="costBeforeDiscountPhase2">0.00</td>
+                        <td id="freeDosesPhase2">0.00 / 0.00</td>
+                        <td id="costFreeDosesPhase2">0.00</td>
+                        <td id="totalCostPhase2">0.00</td>
+                    </tr>
+                    <tr>
+                        <td>9-12 months</td>
+                        <td><input type="number" id="totalDosePhase3" placeholder="Enter Total Doses"></td>
+                        <td id="vialsConsumedPhase3">0.00</td>
+                        <td id="costBeforeDiscountPhase3">0.00</td>
+                        <td id="freeDosesPhase3">0.00 / 0.00</td>
+                        <td id="costFreeDosesPhase3">0.00</td>
+                        <td id="totalCostPhase3">0.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="section">
+            <h2>Yearly Totals</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="highlight">Total Annual Free Doses / Vials</th>
+                        <th class="highlight">Total Cost of Free Doses ($)</th>
+                        <th class="highlight">Total Yearly Cost After Discounts ($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="totalFreeDoses" class="highlight">0.00 / 0.00</td>
+                        <td id="totalCostFreeDoses" class="highlight">0.00</td>
+                        <td id="totalYearlyCostAfterDiscount" class="highlight">0.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="section">
+            <button onclick="calculateResults()">Calculate</button>
+        </div>
+        <div class="note">
+            <strong>Note:</strong> The calculations are based on total doses and manual percentage reductions.
+        </div>
+    </div>
+
+    <script>
+        function calculateResults() {
+            const costPerVial = parseFloat(document.getElementById('costPerVial').value) || 0;
+            const totalDosePhase1 = parseFloat(document.getElementById('totalDosePhase1').value) || 0;
+            const totalDosePhase2 = parseFloat(document.getElementById('totalDosePhase2').value) || 0;
+            const totalDosePhase3 = parseFloat(document.getElementById('totalDosePhase3').value) || 0;
+            const reduction1 = parseFloat(document.getElementById('costReduction1').value) / 100 || 0;
+            const reduction2 = parseFloat(document.getElementById('costReduction2').value) / 100 || 0;
+            const reduction3 = parseFloat(document.getElementById('costReduction3').value) / 100 || 0;
+
+            // Validate inputs
+            if (costPerVial === 0) {
+                alert("Please enter a valid cost per vial.");
+                return;
+            }
+
+            // Phase 1 calculations
+            const vialsPhase1 = totalDosePhase1 / 10; // Fractional vials
+            const costBeforeDiscountPhase1 = vialsPhase1 * costPerVial;
+            const freeDosesPhase1 = totalDosePhase1 * reduction1; // Free doses in mg
+            const freeVialsPhase1 = freeDosesPhase1 / 10; // Free vials
+            const costFreeDosesPhase1 = freeVialsPhase1 * costPerVial;
+            const totalCostPhase1 = costBeforeDiscountPhase1 - costFreeDosesPhase1;
+
+            // Phase 2 calculations
+            const vialsPhase2 = totalDosePhase2 / 10;
+            const costBeforeDiscountPhase2 = vialsPhase2 * costPerVial;
+            const freeDosesPhase2 = totalDosePhase2 * reduction2;
+            const freeVialsPhase2 = freeDosesPhase2 / 10;
+            const costFreeDosesPhase2 = freeVialsPhase2 * costPerVial;
+            const totalCostPhase2 = costBeforeDiscountPhase2 - costFreeDosesPhase2;
+
+            // Phase 3 calculations
+            const vialsPhase3 = totalDosePhase3 / 10;
+            const costBeforeDiscountPhase3 = vialsPhase3 * costPerVial;
+            const freeDosesPhase3 = totalDosePhase3 * reduction3;
+            const freeVialsPhase3 = freeDosesPhase3 / 10;
+            const costFreeDosesPhase3 = freeVialsPhase3 * costPerVial;
+            const totalCostPhase3 = costBeforeDiscountPhase3 - costFreeDosesPhase3;
+
+            // Yearly totals
+            const totalFreeDoses = freeDosesPhase1 + freeDosesPhase2 + freeDosesPhase3;
+            const totalFreeVials = totalFreeDoses / 10; // Convert to vials
+            const totalCostFreeDoses = costFreeDosesPhase1 + costFreeDosesPhase2 + costFreeDosesPhase3;
+            const totalYearlyCostAfterDiscount = totalCostPhase1 + totalCostPhase2 + totalCostPhase3;
+
+            // Update table
+            updateResults(
+                totalDosePhase1, totalDosePhase2, totalDosePhase3,
+                vialsPhase1, vialsPhase2, vialsPhase3,
+                costBeforeDiscountPhase1, costBeforeDiscountPhase2, costBeforeDiscountPhase3,
+                freeDosesPhase1, freeVialsPhase1,
+                freeDosesPhase2, freeVialsPhase2,
+                freeDosesPhase3, freeVialsPhase3,
+                costFreeDosesPhase1, costFreeDosesPhase2, costFreeDosesPhase3,
+                totalCostPhase1, totalCostPhase2, totalCostPhase3,
+                totalFreeDoses, totalFreeVials, totalCostFreeDoses, totalYearlyCostAfterDiscount
+            );
+        }
+
+        function updateResults(
+            totalDosePhase1, totalDosePhase2, totalDosePhase3,
+            vialsPhase1, vialsPhase2, vialsPhase3,
+            costBeforeDiscountPhase1, costBeforeDiscountPhase2, costBeforeDiscountPhase3,
+            freeDosesPhase1, freeVialsPhase1,
+            freeDosesPhase2, freeVialsPhase2,
+            freeDosesPhase3, freeVialsPhase3,
+            costFreeDosesPhase1, costFreeDosesPhase2, costFreeDosesPhase3,
+            totalCostPhase1, totalCostPhase2, totalCostPhase3,
+            totalFreeDoses, totalFreeVials, totalCostFreeDoses, totalYearlyCostAfterDiscount
+        ) {
+            document.getElementById('vialsConsumedPhase1').innerText = vialsPhase1.toFixed(2);
+            document.getElementById('costBeforeDiscountPhase1').innerText = costBeforeDiscountPhase1.toFixed(2);
+            document.getElementById('freeDosesPhase1').innerText = `${freeDosesPhase1.toFixed(2)} / ${freeVialsPhase1.toFixed(2)}`;
+            document.getElementById('costFreeDosesPhase1').innerText = costFreeDosesPhase1.toFixed(2);
+            document.getElementById('totalCostPhase1').innerText = totalCostPhase1.toFixed(2);
+
+            document.getElementById('vialsConsumedPhase2').innerText = vialsPhase2.toFixed(2);
+            document.getElementById('costBeforeDiscountPhase2').innerText = costBeforeDiscountPhase2.toFixed(2);
+            document.getElementById('freeDosesPhase2').innerText = `${freeDosesPhase2.toFixed(2)} / ${freeVialsPhase2.toFixed(2)}`;
+            document.getElementById('costFreeDosesPhase2').innerText = costFreeDosesPhase2.toFixed(2);
+            document.getElementById('totalCostPhase2').innerText = totalCostPhase2.toFixed(2);
+
+            document.getElementById('vialsConsumedPhase3').innerText = vialsPhase3.toFixed(2);
+            document.getElementById('costBeforeDiscountPhase3').innerText = costBeforeDiscountPhase3.toFixed(2);
+            document.getElementById('freeDosesPhase3').innerText = `${freeDosesPhase3.toFixed(2)} / ${freeVialsPhase3.toFixed(2)}`;
+            document.getElementById('costFreeDosesPhase3').innerText = costFreeDosesPhase3.toFixed(2);
+            document.getElementById('totalCostPhase3').innerText = totalCostPhase3.toFixed(2);
+
+            document.getElementById('totalFreeDoses').innerText = `${totalFreeDoses.toFixed(2)} / ${totalFreeVials.toFixed(2)}`;
+            document.getElementById('totalCostFreeDoses').innerText = totalCostFreeDoses.toFixed(2);
+            document.getElementById('totalYearlyCostAfterDiscount').innerText = totalYearlyCostAfterDiscount.toFixed(2);
+        }
+    </script>
+</body>
+</html>
